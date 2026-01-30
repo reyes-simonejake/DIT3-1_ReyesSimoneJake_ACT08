@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Button
+import android.preference.PreferenceManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,14 +13,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var statusText: TextView
@@ -29,7 +29,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var longitudeValue: TextView
     private lateinit var accuracyValue: TextView
     private lateinit var lastUpdateTime: TextView
-    private var googleMap: GoogleMap? = null
+    private lateinit var mapView: MapView
+    private var currentMarker: Marker? = null
     private val handler = Handler(Looper.getMainLooper())
     
     // Demo location (Manila, Philippines)
@@ -43,6 +44,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize OSMDroid configuration
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
+        
         setContentView(R.layout.activity_main)
 
         // Initialize views
@@ -52,16 +57,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         longitudeValue = findViewById(R.id.longitudeValue)
         accuracyValue = findViewById(R.id.accuracyValue)
         lastUpdateTime = findViewById(R.id.lastUpdateTime)
+        mapView = findViewById(R.id.mapView)
         
-        val refreshButton: com.google.android.material.floatingactionbutton.FloatingActionButton = 
-            findViewById(R.id.refreshButton)
+        val refreshButton: FloatingActionButton = findViewById(R.id.refreshButton)
         
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Initialize map
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        // Setup OpenStreetMap
+        setupMap()
 
         // Button click
         refreshButton.setOnClickListener {
@@ -76,32 +79,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             startDemo()
         }
     }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
+    
+    private fun setupMap() {
+        mapView.setTileSource(TileSourceFactory.MAPNIK)
+        mapView.setMultiTouchControls(true)
+        mapView.controller.setZoom(15.0)
         
-        // Enable map controls
-        googleMap?.uiSettings?.apply {
-            isZoomControlsEnabled = true
-            isMyLocationButtonEnabled = true
-            isCompassEnabled = true
-            isMapToolbarEnabled = true
-        }
-        
-        // Enable My Location layer (blue dot) if permission granted
-        if (hasLocationPermission()) {
-            try {
-                googleMap?.isMyLocationEnabled = true
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-            }
-        }
-        
-        // Set map type to normal (default with roads, labels, etc.)
-        googleMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
-        
-        // Start demo immediately
-        startDemo()
+        // Set initial position
+        val startPoint = GeoPoint(currentLat, currentLng)
+        mapView.controller.setCenter(startPoint)
     }
 
     private fun hasLocationPermission(): Boolean {
@@ -126,16 +112,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startDemo() {
         Toast.makeText(this, R.string.tracking_started, Toast.LENGTH_SHORT).show()
         statusText.text = getString(R.string.tracking_active)
-        
-        // Enable My Location layer if permission granted
-        if (hasLocationPermission()) {
-            try {
-                googleMap?.isMyLocationEnabled = true
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-            }
-        }
-        
         updateLocation()
         
         // Auto-update every 3 seconds
@@ -167,17 +143,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         animateTextChange(accuracyValue, "%.1f m".format(accuracy))
         lastUpdateTime.text = "Last updated: $currentTime"
 
-        // Update map with smooth animation
-        val latLng = LatLng(currentLat, currentLng)
-        googleMap?.let { map ->
-            map.clear()
-            map.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-                    .title("${getString(R.string.current_location)} #$updateCount")
-            )
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        // Update map with marker
+        val geoPoint = GeoPoint(currentLat, currentLng)
+        
+        // Remove old marker
+        currentMarker?.let { mapView.overlays.remove(it) }
+        
+        // Add new marker
+        currentMarker = Marker(mapView).apply {
+            position = geoPoint
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            title = "Location #$updateCount"
+            snippet = "Lat: ${"%.6f".format(currentLat)}, Lng: ${"%.6f".format(currentLng)}"
         }
+        mapView.overlays.add(currentMarker)
+        
+        // Animate to new position
+        mapView.controller.animateTo(geoPoint)
+        mapView.invalidate()
     }
     
     private fun animateTextChange(textView: TextView, newText: String) {
@@ -210,6 +193,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 startDemo()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
     }
 
     override fun onDestroy() {

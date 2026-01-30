@@ -158,6 +158,3 @@ This project demonstrates:
 **Simone Jake Reyes**  
 Mobile Development Course  
 Activity 08 - Device Features & Sensors
-
----
-*Built with ❤️ using Android Studio and Kotlin*

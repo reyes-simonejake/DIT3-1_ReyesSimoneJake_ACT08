@@ -1,14 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.example.simplelocationtrackerapp"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.simplelocationtrackerapp"
@@ -48,8 +45,10 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     
-    // Google Maps
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    // OpenStreetMap - FREE, No API Key Required!
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
+    
+    // Google Play Services Location (for GPS)
     implementation("com.google.android.gms:play-services-location:21.1.0")
     
     testImplementation(libs.junit)
