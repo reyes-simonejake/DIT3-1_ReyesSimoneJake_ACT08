@@ -40,10 +40,12 @@ The app uses Android's **FusedLocationProviderClient** from Google Play Services
    - **Accuracy** - Precision radius in meters
 
 ### Map Integration
-- Uses Google Maps Android SDK
+- Uses **OpenStreetMap** (OSMDroid) - FREE, no API key required!
 - Displays user location with a marker
-- Animates camera to follow location changes
+- Animates to follow location changes
 - Zoom level set to 15 for optimal street-level view
+- Pinch to zoom, drag to pan
+- Community-maintained open source maps
 
 ## 🎨 UI Design Features
 
