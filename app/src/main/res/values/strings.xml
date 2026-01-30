@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Location Tracker</string>
+    
+    <!-- Main Screen -->
+    <string name="waiting_location">Waiting for location…</string>
+    <string name="location_update">Location Update</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="refresh_location">Refresh Location</string>
+    <string name="tracking_active">Tracking Active</string>
+    <string name="permission_required">Permission Required</string>
+    
+    <!-- Permissions -->
+    <string name="requesting_permission">Requesting location permission…</string>
+    <string name="permission_granted">Permission granted! ✓</string>
+    <string name="permission_denied">Permission denied - using demo mode</string>
+    
+    <!-- Actions -->
+    <string name="location_refreshed">Location refreshed!</string>
+    <string name="tracking_started">Location tracking started!</string>
+    
+    <!-- Map -->
+    <string name="current_location">Current Location</string>
+</resources>
