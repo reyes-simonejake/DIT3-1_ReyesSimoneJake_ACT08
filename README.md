@@ -78,15 +78,12 @@ The app uses Android's **FusedLocationProviderClient** from Google Play Services
 ## 📸 Screenshots
 
 ### Permission Request
-![Permission Request](screenshot/permission_request.jpg)
 *Initial permission dialog for location access*
 
 ### Map with Location
-![Map Location](screenshot/map_location.jpg)
-*Google Maps displaying current user location*
+*OpenStreetMap displaying current user location with marker*
 
 ### Location Updates
-![Location Update](screenshot/location_update.jpg)
 *Real-time location data with coordinates and accuracy*
 
 ## 🛠 Technical Implementation
@@ -99,12 +96,11 @@ The app uses Android's **FusedLocationProviderClient** from Google Play Services
 
 ### Key Dependencies
 ```gradle
-// Google Maps & Location Services
-implementation("com.google.android.gms:play-services-maps:18.2.0")
-implementation("com.google.android.gms:play-services-location:21.1.0")
+// OpenStreetMap - FREE, No API Key Required!
+implementation("org.osmdroid:osmdroid-android:6.1.18")
 
-// Material Design Components
-implementation("com.google.android.material:material:1.13.0")
+// Google Play Services Location (for GPS)
+implementation("com.google.android.gms:play-services-location:21.1.0")
 ```
 
 ### Project Structure
@@ -134,15 +130,16 @@ app/
    git clone https://github.com/SimoneReyes/MobileDev-StudentName.git
    ```
 
-2. **Add Google Maps API Key**
-   - Get an API key from [Google Cloud Console](https://console.cloud.google.com/)
-   - Create `local.properties` in project root
-   - Add: `MAPS_API_KEY=your_api_key_here`
+2. **Open in Android Studio**
+   - Open the project
+   - Sync Gradle files
+   - Wait for dependencies to download
 
 3. **Build and Run**
-   - Open project in Android Studio
-   - Sync Gradle files
-   - Run on emulator or physical device with GPS enabled
+   - Click Run (▶️) button
+   - Select your device
+   - Grant location permission when prompted
+   - Enjoy your location tracker with OpenStreetMap!
 
 ## 📚 Learning Outcomes
 
