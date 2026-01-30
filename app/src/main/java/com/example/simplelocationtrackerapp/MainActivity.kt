@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var latitudeValue: TextView
     private lateinit var longitudeValue: TextView
     private lateinit var accuracyValue: TextView
-    private lateinit var statusIndicator: android.view.View
+    private lateinit var lastUpdateTime: TextView
     private var googleMap: GoogleMap? = null
     private val handler = Handler(Looper.getMainLooper())
     
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         latitudeValue = findViewById(R.id.latitudeValue)
         longitudeValue = findViewById(R.id.longitudeValue)
         accuracyValue = findViewById(R.id.accuracyValue)
-        statusIndicator = findViewById(R.id.statusIndicator)
+        lastUpdateTime = findViewById(R.id.lastUpdateTime)
         
         val refreshButton: com.google.android.material.floatingactionbutton.FloatingActionButton = 
             findViewById(R.id.refreshButton)
@@ -79,8 +79,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        googleMap?.uiSettings?.isZoomControlsEnabled = true
-        googleMap?.uiSettings?.isMyLocationButtonEnabled = true
+        
+        // Enable map controls
+        googleMap?.uiSettings?.apply {
+            isZoomControlsEnabled = true
+            isMyLocationButtonEnabled = true
+            isCompassEnabled = true
+            isMapToolbarEnabled = true
+        }
+        
+        // Enable My Location layer (blue dot) if permission granted
+        if (hasLocationPermission()) {
+            try {
+                googleMap?.isMyLocationEnabled = true
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+        }
+        
+        // Set map type to normal (default with roads, labels, etc.)
+        googleMap?.mapType = GoogleMap.MAP_TYPE_NORMAL
         
         // Start demo immediately
         startDemo()
@@ -108,6 +126,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startDemo() {
         Toast.makeText(this, R.string.tracking_started, Toast.LENGTH_SHORT).show()
         statusText.text = getString(R.string.tracking_active)
+        
+        // Enable My Location layer if permission granted
+        if (hasLocationPermission()) {
+            try {
+                googleMap?.isMyLocationEnabled = true
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+        }
+        
         updateLocation()
         
         // Auto-update every 3 seconds
@@ -128,13 +156,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         
         val accuracy = 10.0f + (Math.random() * 5).toFloat()
         
-        // Update UI elements
-        updateCounter.text = "#$updateCount"
-        latitudeValue.text = "%.6f".format(currentLat)
-        longitudeValue.text = "%.6f".format(currentLng)
-        accuracyValue.text = "%.1f m".format(accuracy)
+        // Get current time
+        val currentTime = java.text.SimpleDateFormat("hh:mm:ss a", java.util.Locale.getDefault())
+            .format(java.util.Date())
+        
+        // Animate value changes
+        animateTextChange(updateCounter, "#$updateCount")
+        animateTextChange(latitudeValue, "%.6f".format(currentLat))
+        animateTextChange(longitudeValue, "%.6f".format(currentLng))
+        animateTextChange(accuracyValue, "%.1f m".format(accuracy))
+        lastUpdateTime.text = "Last updated: $currentTime"
 
-        // Update map
+        // Update map with smooth animation
         val latLng = LatLng(currentLat, currentLng)
         googleMap?.let { map ->
             map.clear()
@@ -145,6 +178,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             )
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
         }
+    }
+    
+    private fun animateTextChange(textView: TextView, newText: String) {
+        textView.animate()
+            .alpha(0f)
+            .setDuration(150)
+            .withEndAction {
+                textView.text = newText
+                textView.animate()
+                    .alpha(1f)
+                    .setDuration(150)
+                    .start()
+            }
+            .start()
     }
 
     override fun onRequestPermissionsResult(

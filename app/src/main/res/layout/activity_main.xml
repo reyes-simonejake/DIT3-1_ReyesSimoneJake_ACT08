@@ -8,161 +8,321 @@
     android:background="@color/background"
     tools:context=".MainActivity">
 
-    <!-- Map Fragment -->
+    <!-- Map Fragment - Full Background -->
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Top Info Card -->
+    <!-- Glassmorphism Info Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/infoCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:layout_gravity="top"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/card_background">
+        app:cardCornerRadius="24dp"
+        app:cardElevation="16dp"
+        android:backgroundTint="@color/glass_effect">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="24dp">
 
-            <!-- Header with Status -->
+            <!-- Header Section with Pulse Animation -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="20dp">
 
-                <View
-                    android:id="@+id/statusIndicator"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:background="@drawable/status_indicator"
-                    android:layout_marginEnd="12dp" />
+                <!-- Animated Pulse Indicator -->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp">
+                    
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/pulse_animation"
+                        android:layout_centerInParent="true" />
+                    
+                    <View
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/pulse_ring"
+                        android:alpha="0.5"
+                        android:layout_centerInParent="true" />
+                    
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/statusText"
+                <!-- Status Text -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/tracking_active"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/statusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tracking_active"
+                        android:textColor="@color/text_primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="-0.01" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📡 Real-time GPS tracking"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- Gradient Update Counter Badge -->
                 <TextView
                     android:id="@+id/updateCounter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="#0"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:background="@drawable/counter_background" />
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/badge_gradient"
+                    android:elevation="4dp" />
 
             </LinearLayout>
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/text_hint"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Location Data Grid -->
+            <!-- Location Data Cards with Icons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/data_item_background"
+                android:padding="20dp">
 
-                <!-- Latitude Row -->
+                <!-- Latitude Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/latitude"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
+                    <!-- Icon with Gradient Background -->
+                    <FrameLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/icon_circle_blue"
+                        android:layout_marginEnd="16dp"
+                        android:elevation="2dp">
 
-                    <TextView
-                        android:id="@+id/latitudeValue"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📍"
+                            android:textSize="28sp"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+
+                    <!-- Data Column -->
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="--"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LATITUDE"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:id="@+id/latitudeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="monospace"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Longitude Row -->
+                <!-- Elegant Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E2E8F0"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Longitude Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/longitude"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
+                    <!-- Icon with Gradient Background -->
+                    <FrameLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/icon_circle_green"
+                        android:layout_marginEnd="16dp"
+                        android:elevation="2dp">
 
-                    <TextView
-                        android:id="@+id/longitudeValue"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🌍"
+                            android:textSize="28sp"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+
+                    <!-- Data Column -->
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="--"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LONGITUDE"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:id="@+id/longitudeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="monospace"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Accuracy Row -->
+                <!-- Elegant Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E2E8F0"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Accuracy Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/accuracy"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
+                    <!-- Icon with Gradient Background -->
+                    <FrameLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/icon_circle_orange"
+                        android:layout_marginEnd="16dp"
+                        android:elevation="2dp">
 
-                    <TextView
-                        android:id="@+id/accuracyValue"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎯"
+                            android:textSize="28sp"
+                            android:layout_gravity="center" />
+
+                    </FrameLayout>
+
+                    <!-- Data Column -->
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="--"
-                        android:textColor="@color/success"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ACCURACY"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:id="@+id/accuracyValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/success"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Last Updated with Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="12dp"
+                android:background="#F7FAFC"
+                android:alpha="0.8">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏱️"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/lastUpdateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Auto-updating every 3 seconds"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-medium" />
 
             </LinearLayout>
 
@@ -170,18 +330,20 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Floating Action Button -->
+    <!-- Gradient Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/refreshButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
+        android:layout_margin="28dp"
         android:contentDescription="@string/refresh_location"
         android:src="@android:drawable/ic_menu_mylocation"
         app:tint="@color/white"
         app:backgroundTint="@color/primary"
-        app:elevation="8dp"
-        app:borderWidth="0dp" />
+        app:elevation="16dp"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:rippleColor="@color/primary_light" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

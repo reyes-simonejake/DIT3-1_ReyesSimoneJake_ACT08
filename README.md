@@ -47,18 +47,33 @@ The app uses Android's **FusedLocationProviderClient** from Google Play Services
 
 ## 🎨 UI Design Features
 
-### Modern Material Design
-- **Card-based Information Panel** - Elevated card with rounded corners displaying location data
-- **Floating Action Button** - Quick access to manual location refresh
-- **Status Indicator** - Green dot showing active tracking
-- **Update Counter** - Badge showing number of location updates
-- **Color Scheme** - Blue primary color (#2196F3) with complementary accents
+### Modern Material Design 3
+- **Enhanced Card Layout** - Large, elevated card with rounded corners (24dp radius)
+- **Icon-Based Display** - Each metric has a colorful emoji icon in a circular background
+  - 📍 Blue circle for Latitude
+  - 🌍 Green circle for Longitude  
+  - 🎯 Orange circle for Accuracy
+- **Visual Separators** - Clean dividers between data rows
+- **Status Indicators** - Pulsing green dot showing active tracking
+- **Update Counter** - Styled badge with green border showing update count
+- **Timestamp Display** - Shows exact time of last update
+- **Floating Action Button** - Large, elevated FAB for manual refresh
+- **Color Scheme** - Vibrant blue primary (#2196F3) with green accents
 
 ### Layout Components
 - **CoordinatorLayout** - Enables smooth animations and interactions
-- **MaterialCardView** - Clean, elevated information display
-- **Grid Layout** - Organized data presentation with labels and values
+- **MaterialCardView** - Clean, elevated information display with gradient
+- **Icon Backgrounds** - Colored circular backgrounds for visual appeal
+- **Grid Layout** - Organized data presentation with icons, labels and values
 - **Monospace Font** - For precise coordinate display
+- **Gradient Overlay** - Subtle purple gradient on top for depth
+
+### Typography
+- **Large Status Text** - 20sp bold for main status
+- **Subtitle** - "Real-time GPS tracking" for context
+- **Uppercase Labels** - 12sp with letter spacing for clarity
+- **Bold Values** - 18sp monospace for coordinates
+- **Time Display** - Live timestamp with clock emoji
 
 ## 📸 Screenshots
 
